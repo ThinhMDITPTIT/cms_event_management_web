@@ -15,40 +15,42 @@ export default function Login(props) {
   } = props;
 
   return (
-    <section className='login'>
-      <div className='loginContainer'>
-        <h1>Welcome to EvM CMS !!!</h1>
-        <label>Username</label>
-        <input
-          type='text'
-          autoFocus
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <p className='errorMsg'>{emailError}</p>
+    <section className='mainLogin'>
+      <div className='glass'>
+        <div className='login'>
+          <div className='loginContainer'>
+            <h1>Welcome to EvM CMS !!!</h1>
+            <label>Username</label>
+            <input
+              type='text'
+              autoFocus
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <p className='errorMsg'>{emailError}</p>
 
-        <label>Password</label>
-        <input
-          type='password'
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <p className='errorMsg'>{passwordError}</p>
+            <label>Password</label>
+            <input
+              type='password'
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <p className='errorMsg'>{passwordError}</p>
 
-        <div className='btnContainer'>
-          {/* {hasAccount ? ( */}
-          <>
-            <button className='buttonLogin_out' onClick={handleLogin}>
-              Sign In
-            </button>
-            {/* <p>
+            <div className='btnContainer'>
+              {/* {hasAccount ? ( */}
+              <>
+                <button className='buttonLogin_out' onClick={handleLogin}>
+                  Sign In
+                </button>
+                {/* <p>
               Don't have an account?
               <span onClick={setHasAccount(!hasAccount)}>Sign Up</span>
             </p> */}
-          </>
-          {/* ) : (
+              </>
+              {/* ) : (
             <>
               <button onClick={handleSignUp}>Sign Up</button>
               <p>
@@ -57,8 +59,12 @@ export default function Login(props) {
               </p>
             </>
           )} */}
+            </div>
+          </div>
         </div>
       </div>
+      <div className='circle1'></div>
+      <div className='circle2'></div>
     </section>
   );
 }

@@ -63,6 +63,52 @@
   font-family: 'Nunito', sans-serif;
 }
 
+.mainLogin {
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(to right top, #65dfc9, #6cdbeb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glass {
+  background: white;
+  min-height: 80vh;
+  width: 40%;
+  background: linear-gradient(
+    to right bottom,
+    rgba(255, 255, 255, 0.7),
+    rgba(255, 255, 255, 0.3)
+  );
+  border-radius: 2rem;
+  z-index: 2;
+  backdrop-filter: blur(2rem);
+  display: flex;
+}
+.circle1,
+.circle2 {
+  background: white;
+  background: linear-gradient(
+    to right bottom,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.3)
+  );
+  height: 20rem;
+  width: 20rem;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.circle1 {
+  top: 5%;
+  right: 10%;
+}
+.circle2 {
+  bottom: 5%;
+  left: 10%;
+}
+
 .buttonLogin_out {
   border: none;
   outline: none;
@@ -77,10 +123,11 @@
 
 .login {
   width: 100%;
-  min-height: 100vh;
-  padding: 0 20px;
-  background: #e9e9e9;
+  /* min-height: 100vh; */
+  /* padding: 0 20px; */
+  /* background: #e9e9e9; */
   display: flex;
+  border-radius: 2rem;
 }
 
 .login .loginContainer {
@@ -88,7 +135,8 @@
   margin: auto;
   width: 100%;
   max-width: 520px;
-  min-height: 600px;
+  /* min-height: 600px; */
+  border-radius: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;

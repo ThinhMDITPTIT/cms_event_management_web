@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(15),
   },
   titleProfile: {
-    margin: '10px 0px 10px 0px',
+    // margin: '10px 0px 10px 0px',
   },
   TableContainer: {
     width: 650,
@@ -56,7 +56,15 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing(2),
-    backgroundColor: 'gray',
+    background: 'white',
+    minWidth: '60%',
+    minHeight: '80vh',
+    background:
+      'linear-gradient(to right bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3))',
+    borderRadius: '2rem',
+    boxShadow: '6px 6px 20px rgba(122, 122, 122, 0.212)',
+    zIndex: 2,
+    backdropFilter: 'blur(2rem)',
   },
   sliderImage: {
     display: 'flex',
