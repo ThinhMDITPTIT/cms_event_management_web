@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import FirebaseConfig from '../../firebaseConfig';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
@@ -6,7 +6,7 @@ import { Carousel } from 'react-responsive-carousel';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
-import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -69,13 +69,33 @@ const useStyles = makeStyles((theme) => ({
 export default function EventsManagement(props) {
   const classes = useStyles();
   const { eventsList } = props;
+  const currentUserID = FirebaseConfig.auth().currentUser.uid;
+  const eventsRef = FirebaseConfig.database().ref('Events');
+  const usersRef = FirebaseConfig.database().ref('Users').child(currentUserID);
 
   const handleClickRemove = (ID) => {
-    console.log(eventsList);
+    eventsRef.child(ID).on('value', (snapshot) => {
+      console.log(ID);
+      console.log(snapshot.val());
+    });
+    usersRef.child('userEvents').on('value', (snapshot) => {
+      const tempEV = [];
+      for (let i in snapshot.val()) {
+        tempEV.push(snapshot.val()[i]);
+      }
+      for (let i in tempEV) {
+        if (tempEV[i] === ID) {
+          console.log('remove this: ' + tempEV[i]);
+        }
+      }
+    });
   };
 
   const handleClickEdit = (ID) => {
-    console.log(eventsList);
+    eventsRef.child(ID).on('value', (snapshot) => {
+      console.log(ID);
+      console.log(snapshot.val());
+    });
   };
 
   return (
@@ -95,7 +115,7 @@ export default function EventsManagement(props) {
                     //   src={image}
                     //   className={classes.large}
                     // />
-                    <img src={image} key={indexItem} />
+                    <img src={image} key={indexItem} alt='event_images' />
                   ))}
               </Carousel>
             </Box>
@@ -148,25 +168,25 @@ export default function EventsManagement(props) {
                     <TableCell align='left'>{eventItem.end_date}</TableCell>
                   </TableRow>
                   <TableRow>
-                    {/* <TableCell></TableCell>
+                    <TableCell></TableCell>
                     <TableCell align='right'>
                       <Button
                         variant='outlined'
                         color='primary'
-                        onClick={() => handleClickRemove(index)}
+                        onClick={() => handleClickRemove(eventItem.ID)}
                       >
                         Remove
                       </Button>
-                    </TableCell> */}
-                    {/* <TableCell align='center'>
+                    </TableCell>
+                    <TableCell align='center'>
                       <Button
                         variant='outlined'
                         color='primary'
-                        onClick={() => handleClickEdit(index)}
+                        onClick={() => handleClickEdit(eventItem.ID)}
                       >
                         Edit
                       </Button>
-                    </TableCell> */}
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
