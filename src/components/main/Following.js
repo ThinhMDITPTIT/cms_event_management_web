@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import FirebaseConfig from '../../firebaseConfig';
+// import FirebaseConfig from '../../firebaseConfig';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -43,44 +43,15 @@ export default function Following(props) {
   const classes = useStyles();
 
   const [followingList, setFollowingList] = useState([]);
-  const [followingID, setFollowingID] = useState([]);
-  const [followingDetail, setFollowingDetail] = useState([]);
 
   useEffect(() => {
     setFollowingList(props.followingList);
   }, [props]);
 
-  useEffect(() => {
-    if (followingList[0] !== undefined) {
-      const temp = [];
-      for (let following in followingList) {
-        temp.push(followingList[following].ID);
-      }
-      console.log(temp);
-      setFollowingID(temp);
-    }
-  }, [followingList]);
-
-  useEffect(() => {
-    if (followingID[0] !== undefined) {
-      const tempDetail = [];
-      for (let i in followingID) {
-        const folowerDetailRef = FirebaseConfig.database()
-          .ref('Users')
-          .child(followingID[i]);
-        folowerDetailRef.on('value', (snapshot) => {
-          tempDetail.push(snapshot.val());
-        });
-      }
-      console.log(tempDetail);
-      setFollowingDetail(tempDetail);
-    }
-  }, [followingID]);
-
   return (
     <Paper className={classes.paper}>
-      {followingDetail !== [] &&
-        followingDetail.map((following, index) => (
+      {followingList !== [] &&
+        followingList.map((following, index) => (
           <Paper key={index}>
             <Avatar
               alt='Remy Sharp'
