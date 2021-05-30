@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing(2),
-    background: 'white',
     minWidth: '60%',
     minHeight: '80vh',
     background:
@@ -89,6 +88,9 @@ export default function ProfileUser(props) {
 
   const handleOpenEditProfile = () => {
     setOpen(true);
+    setTimeout(function () {
+      console.clear();
+    }, 0);
   };
 
   const handleEditProfile = () => {
@@ -108,7 +110,7 @@ export default function ProfileUser(props) {
     setUserFN(usersList.userFullName);
     setUserE(usersList.userEmail);
     setUserB(usersList.userBio);
-    console.log('not admin');
+    // console.log('not admin');
   }, [usersList]);
 
   return (

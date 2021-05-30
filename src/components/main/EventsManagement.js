@@ -56,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing(2),
-    background: 'white',
     minWidth: '60%',
     minHeight: '80vh',
     background:
@@ -91,6 +90,7 @@ export default function EventsManagement(props) {
   }
   const eventsRef = FirebaseConfig.database().ref('Events');
   const usersRef = FirebaseConfig.database().ref('Users').child(currentUserID);
+  const allUsersRef = FirebaseConfig.database().ref('Users');
 
   const [eventEditing, setEventEditing] = useState({});
   const [eventRemoving, setEventRemoving] = useState({});
@@ -145,12 +145,14 @@ export default function EventsManagement(props) {
   const [openConfirmRemove, setOpenConfirmRemove] = useState(false);
   const handleCloseConfirmRemoveEvent = (event) => {
     setOpenConfirmRemove(false);
+    setConfirmRemove('');
   };
   const handleOpenConfirmRemoveEvent = (eventID) => {
     setOpenConfirmRemove(true);
     eventsRef.child(eventID).on('value', (snapshot) => {
       setEventRemoving({ eventID, ...snapshot.val() });
     });
+    setConfirmRemove('');
   };
   const handleChangeConfirm = (event) => {
     setConfirmRemove(event.target.value);
@@ -167,11 +169,39 @@ export default function EventsManagement(props) {
       }
       for (let i in tempEV) {
         if (tempEV[i] === eventRemoving.eventID) {
-          console.log('remove this: ' + tempEV[i]);
+          console.log('remove this from user events: ' + tempEV[i]);
         }
       }
     });
+    allUsersRef.on('value', (snapshot) => {
+      const tempAllUsers = [];
+      for (let userItemID in snapshot.val()) {
+        tempAllUsers.push({ userItemID, ...snapshot.val()[userItemID] });
+      }
+      for (let i in tempAllUsers) {
+        allUsersRef
+          .child(tempAllUsers[i].userItemID)
+          .child('JoinedEvents')
+          .on('value', (snapshot) => {
+            const tempJoinedEvents = [];
+            for (let joinedEventID in snapshot.val()) {
+              tempJoinedEvents.push({
+                joinedEventID,
+              });
+            }
+            for (let i in tempJoinedEvents) {
+              if (tempJoinedEvents[i].joinedEventID === eventRemoving.eventID) {
+                console.log(
+                  'remove this from joined list: ' +
+                    tempJoinedEvents[i].joinedEventID
+                );
+              }
+            }
+          });
+      }
+    });
     setOpenConfirmRemove(false);
+    setConfirmRemove('');
   };
 
   const handleClickEdit = (ID) => {

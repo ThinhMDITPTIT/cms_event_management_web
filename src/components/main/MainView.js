@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
-    backgroundColor: 'gray',
+    background: 'linear-gradient(to right top, #65dfc9, #6cdbeb)',
   },
   drawerOpen: {
     width: drawerWidth,
@@ -163,7 +163,13 @@ export default function MainView({ handleLogOut }) {
     if (action === currentAction) {
       // toggle to disable
       // setCurrentAction(0);
+      setTimeout(function () {
+        console.clear();
+      }, 0);
     } else {
+      setTimeout(function () {
+        console.clear();
+      }, 0);
       setCurrentAction(action);
     }
     try {
@@ -263,6 +269,9 @@ export default function MainView({ handleLogOut }) {
         setFollowingList(tempFollowingDetail);
       });
     }
+    setTimeout(function () {
+      console.clear();
+    }, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -288,7 +297,7 @@ export default function MainView({ handleLogOut }) {
             <MenuIcon />
           </IconButton>
           <Typography variant='h6' noWrap className={classes.colorText}>
-            Welcome to EvM CMS
+            Event Management
           </Typography>
           <Button
             className={classes.logoutBtn}
@@ -343,7 +352,7 @@ export default function MainView({ handleLogOut }) {
             >
               <AccountCircleIcon />
             </ListItemIcon>
-            <ListItemText>Profile User</ListItemText>
+            <ListItemText>Profile</ListItemText>
           </ListItem>
 
           {/* Events */}
@@ -365,7 +374,7 @@ export default function MainView({ handleLogOut }) {
             >
               <EventIcon />
             </ListItemIcon>
-            <ListItemText>Events Manage</ListItemText>
+            <ListItemText>Events</ListItemText>
           </ListItem>
           {/* Followers */}
           <ListItem
