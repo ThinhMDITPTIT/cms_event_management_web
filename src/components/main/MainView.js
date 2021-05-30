@@ -205,14 +205,40 @@ export default function MainView({ handleLogOut }) {
       for (let ID in snapshot.val()) {
         follower.push({ ID });
       }
-      setFollowersList(follower);
+      const tempFollowers = [];
+      for (let i in follower) {
+        tempFollowers.push(follower[i].ID);
+      }
+      const tempFollowersDetail = [];
+      for (let i in tempFollowers) {
+        const folowerDetailRef = FirebaseConfig.database()
+          .ref('Users')
+          .child(tempFollowers[i]);
+        folowerDetailRef.on('value', (snapshot) => {
+          tempFollowersDetail.push(snapshot.val());
+        });
+      }
+      setFollowersList(tempFollowersDetail);
     });
     followingRef.on('value', (snapshot) => {
       const following = [];
       for (let ID in snapshot.val()) {
         following.push({ ID });
       }
-      setFollowingList(following);
+      const tempFollowing = [];
+      for (let i in following) {
+        tempFollowing.push(following[i].ID);
+      }
+      const tempFollowingDetail = [];
+      for (let i in tempFollowing) {
+        const followingDetailRef = FirebaseConfig.database()
+          .ref('Users')
+          .child(tempFollowing[i]);
+        followingDetailRef.on('value', (snapshot) => {
+          tempFollowingDetail.push(snapshot.val());
+        });
+      }
+      setFollowingList(tempFollowingDetail);
     });
     // }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import FirebaseConfig from '../../firebaseConfig';
+// import FirebaseConfig from '../../firebaseConfig';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -43,44 +43,15 @@ export default function Followers(props) {
   const classes = useStyles();
 
   const [followersList, setFollowersList] = useState([]);
-  const [followersID, setFollowersID] = useState([]);
-  const [followersDetail, setFollowersDetail] = useState([]);
 
   useEffect(() => {
     setFollowersList(props.followersList);
   }, [props]);
 
-  useEffect(() => {
-    if (followersList[0] !== undefined) {
-      const temp = [];
-      for (let follower in followersList) {
-        temp.push(followersList[follower].ID);
-      }
-      console.log(temp);
-      setFollowersID(temp);
-    }
-  }, [followersList]);
-
-  useEffect(() => {
-    if (followersID[0] !== undefined) {
-      const tempDetail = [];
-      for (let i in followersID) {
-        const folowerDetailRef = FirebaseConfig.database()
-          .ref('Users')
-          .child(followersID[i]);
-        folowerDetailRef.on('value', (snapshot) => {
-          tempDetail.push(snapshot.val());
-        });
-      }
-      console.log(tempDetail);
-      setFollowersDetail(tempDetail);
-    }
-  }, [followersID]);
-
   return (
     <Paper className={classes.paper}>
-      {followersDetail !== [] &&
-        followersDetail.map((follower, index) => (
+      {followersList !== [] &&
+        followersList.map((follower, index) => (
           <Paper key={index}>
             <Avatar
               alt='Remy Sharp'
