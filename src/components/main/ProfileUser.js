@@ -48,7 +48,15 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing(2),
-    backgroundColor: 'gray',
+    background: 'white',
+    minWidth: '60%',
+    minHeight: '80vh',
+    background:
+      'linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 255, 255, 0.3))',
+    borderRadius: '2rem',
+    zIndex: 2,
+    boxShadow: '6px 6px 20px rgba(122, 122, 122, 0.212)',
+    backdropFilter: 'blur(2rem)',
   },
   btn: {
     backgroundColor: 'green',

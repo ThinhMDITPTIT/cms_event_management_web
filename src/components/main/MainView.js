@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    backgroundColor: 'gray',
+    background: 'linear-gradient(to right top, #65dfc9, #6cdbeb)',
   },
   appBarShift: {
     marginLeft: drawerWidth,
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    backgroundColor: 'gray',
+    background: 'linear-gradient(to right top, #65dfc9, #6cdbeb)',
   },
   menuButton: {
     marginRight: 36,
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    backgroundColor: 'gray',
+    background: 'linear-gradient(to right top, #65dfc9, #6cdbeb)',
   },
   drawerClose: {
     transition: theme.transitions.create('width', {
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9) + 1,
     },
-    backgroundColor: 'gray',
+    background: 'linear-gradient(to right top, #65dfc9, #6cdbeb)',
   },
   toolbar: {
     display: 'flex',
@@ -92,21 +92,35 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    fontFamily: '"Poppins", sans-serif',
+    minHeight: '100vh',
+    background: 'linear-gradient(to right top, #65dfc9, #6cdbeb)',
+  },
+  mainView: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   // action toolbar
   action: {
     cursor: 'pointer',
-    color: '#dadbdf',
+    color: '#273f5f',
   },
   selectedAction: {
     cursor: 'pointer',
-    color: '#00b9ff',
+    color: '#010811',
   },
   logoutBtn: {
     marginLeft: 'auto',
-    padding: 10,
+    padding: 5,
     backgroundColor: 'green',
+  },
+  colorText: {
+    color: '#426696',
+    fontWeight: 600,
+    fontSize: '1.8rem',
+    opacity: 0.9,
   },
 }));
 
@@ -273,7 +287,7 @@ export default function MainView({ handleLogOut }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant='h6' noWrap>
+          <Typography variant='h6' noWrap className={classes.colorText}>
             Welcome to EvM CMS
           </Typography>
           <Button
@@ -401,26 +415,28 @@ export default function MainView({ handleLogOut }) {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {/* PROFILE USER */}
-        {currentAction === 'PROFILE' && isAdmin === true && (
-          <ListUsers usersList={usersList} />
-        )}
-        {/* PROFILE USER */}
-        {currentAction === 'PROFILE' && isAdmin === false && (
-          <ProfileUser usersList={usersList} />
-        )}
-        {/* EVENTS MANAGEMENT */}
-        {currentAction === 'EVENTS' && (
-          <EventsManagement eventsList={eventsList} />
-        )}
-        {/* FOLLOWERS */}
-        {currentAction === 'FOLLOWERS' && isAdmin === false && (
-          <Followers followersList={followersList} />
-        )}
-        {/* FOLLOWING */}
-        {currentAction === 'FOLLOWING' && isAdmin === false && (
-          <Following followingList={followingList} />
-        )}
+        <div className={classes.mainView}>
+          {/* PROFILE USER */}
+          {currentAction === 'PROFILE' && isAdmin === true && (
+            <ListUsers usersList={usersList} />
+          )}
+          {/* PROFILE USER */}
+          {currentAction === 'PROFILE' && isAdmin === false && (
+            <ProfileUser usersList={usersList} />
+          )}
+          {/* EVENTS MANAGEMENT */}
+          {currentAction === 'EVENTS' && (
+            <EventsManagement eventsList={eventsList} />
+          )}
+          {/* FOLLOWERS */}
+          {currentAction === 'FOLLOWERS' && isAdmin === false && (
+            <Followers followersList={followersList} />
+          )}
+          {/* FOLLOWING */}
+          {currentAction === 'FOLLOWING' && isAdmin === false && (
+            <Following followingList={followingList} />
+          )}
+        </div>
       </main>
     </div>
   );
