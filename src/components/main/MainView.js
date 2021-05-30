@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import FirebaseConfig from '../../firebaseConfig';
 import ProfileUser from './ProfileUser';
 import ListUsers from './ListUsers';
+import Followers from './Followers';
+import Following from './Following';
 import EventsManagement from './EventsManagement';
 
 import clsx from 'clsx';
@@ -114,8 +116,8 @@ export default function MainView({ handleLogOut }) {
   const [open, setOpen] = React.useState(false);
   const currentUserID = FirebaseConfig.auth().currentUser.uid;
   var isAdmin = false;
-  if (currentUserID == 'HGRsUSOUv8ZiYX0Fxd2UC1Dw88s1') {
-    isAdmin = true;
+  if (currentUserID === 'HGRsUSOUv8ZiYX0Fxd2UC1Dw88s1') {
+    isAdmin = isAdmin;
   }
 
   // Default Account action
@@ -123,6 +125,8 @@ export default function MainView({ handleLogOut }) {
 
   const [eventsList, setEventsList] = useState({});
   const [usersList, setUsersList] = useState({});
+  const [followersList, setFollowersList] = useState([]);
+  const [followingList, setFollowingList] = useState([]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -153,48 +157,65 @@ export default function MainView({ handleLogOut }) {
     const usersRef = FirebaseConfig.database()
       .ref('Users')
       .child(currentUserID);
+    const followersRef = usersRef.child('Follow').child('Followers');
+    const followingRef = usersRef.child('Follow').child('Following');
 
-    if (currentUserID == 'HGRsUSOUv8ZiYX0Fxd2UC1Dw88s1') {
-      eventsRef.on('value', (snapshot) => {
-        var eventsTbl = snapshot.val();
-        const temp = [];
-        for (let id in eventsTbl) {
-          temp.push({ id, ...eventsTbl[id] });
-        }
-        setEventsList(temp);
-      });
-      usersAdminRef.on('value', (snapshot) => {
-        var usersTbl = snapshot.val();
-        const tempAd = [];
-        for (let id in usersTbl) {
-          tempAd.push({ id, ...usersTbl[id] });
-        }
-        setUsersList(tempAd);
-      });
-    } else {
-      eventsRef.on('value', (snapshot) => {
-        const eventsTbl = snapshot.val();
-        const eventsListTbl = [];
-        const temp = [];
-        for (let hostEvent in eventsTbl) {
-          temp.push(hostEvent);
-        }
-        const tempEvents = temp;
-        for (let i = 0; i < tempEvents.length; i++) {
-          eventsRef.child(tempEvents[i]).on('value', (snapshotEV) => {
-            const item = snapshotEV.val();
-            if (item.uid == currentUserID) {
-              eventsListTbl.push(item);
-            }
-          });
-        }
-        setEventsList(eventsListTbl);
-      });
-      usersRef.on('value', (snapshot) => {
-        var usersTbl = snapshot.val();
-        setUsersList(usersTbl);
-      });
-    }
+    // if (currentUserID === 'HGRsUSOUv8ZiYX0Fxd2UC1Dw88s1') {
+    //   eventsRef.on('value', (snapshot) => {
+    //     var eventsTbl = snapshot.val();
+    //     const temp = [];
+    //     for (let id in eventsTbl) {
+    //       temp.push({ id, ...eventsTbl[id] });
+    //     }
+    //     setEventsList(temp);
+    //   });
+    //   usersAdminRef.on('value', (snapshot) => {
+    //     var usersTbl = snapshot.val();
+    //     const tempAd = [];
+    //     for (let id in usersTbl) {
+    //       tempAd.push({ id, ...usersTbl[id] });
+    //     }
+    //     setUsersList(tempAd);
+    //   });
+    // } else {
+    eventsRef.on('value', (snapshot) => {
+      const eventsTbl = snapshot.val();
+      const eventsListTbl = [];
+      const temp = [];
+      for (let hostEvent in eventsTbl) {
+        temp.push(hostEvent);
+      }
+      const tempEvents = temp;
+      for (let i = 0; i < tempEvents.length; i++) {
+        eventsRef.child(tempEvents[i]).on('value', (snapshotEV) => {
+          const item = snapshotEV.val();
+          let ID = tempEvents[i];
+          if (item.uid === currentUserID) {
+            eventsListTbl.push({ ID, ...item });
+          }
+        });
+      }
+      setEventsList(eventsListTbl);
+    });
+    usersRef.on('value', (snapshot) => {
+      setUsersList(snapshot.val());
+    });
+    followersRef.on('value', (snapshot) => {
+      const follower = [];
+      for (let ID in snapshot.val()) {
+        follower.push({ ID });
+      }
+      setFollowersList(follower);
+    });
+    followingRef.on('value', (snapshot) => {
+      const following = [];
+      for (let ID in snapshot.val()) {
+        following.push({ ID });
+      }
+      setFollowingList(following);
+    });
+    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -298,21 +319,71 @@ export default function MainView({ handleLogOut }) {
             </ListItemIcon>
             <ListItemText>Events Manage</ListItemText>
           </ListItem>
+          {/* Followers */}
+          <ListItem
+            button
+            onClick={() => actionCallBack('FOLLOWERS')}
+            className={
+              currentAction === 'FOLLOWERS'
+                ? classes.selectedAction
+                : classes.action
+            }
+          >
+            <ListItemIcon
+              className={
+                currentAction === 'FOLLOWERS'
+                  ? classes.selectedAction
+                  : classes.action
+              }
+            >
+              <EventIcon />
+            </ListItemIcon>
+            <ListItemText>Followers</ListItemText>
+          </ListItem>
+          {/* Following */}
+          <ListItem
+            button
+            onClick={() => actionCallBack('FOLLOWING')}
+            className={
+              currentAction === 'FOLLOWING'
+                ? classes.selectedAction
+                : classes.action
+            }
+          >
+            <ListItemIcon
+              className={
+                currentAction === 'FOLLOWING'
+                  ? classes.selectedAction
+                  : classes.action
+              }
+            >
+              <EventIcon />
+            </ListItemIcon>
+            <ListItemText>Following</ListItemText>
+          </ListItem>
         </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
         {/* PROFILE USER */}
-        {currentAction === 'PROFILE' && isAdmin == true && (
+        {currentAction === 'PROFILE' && isAdmin === true && (
           <ListUsers usersList={usersList} />
         )}
         {/* PROFILE USER */}
-        {currentAction === 'PROFILE' && isAdmin == false && (
+        {currentAction === 'PROFILE' && isAdmin === false && (
           <ProfileUser usersList={usersList} />
         )}
         {/* EVENTS MANAGEMENT */}
         {currentAction === 'EVENTS' && (
           <EventsManagement eventsList={eventsList} />
+        )}
+        {/* FOLLOWERS */}
+        {currentAction === 'FOLLOWERS' && (
+          <Followers followersList={followersList} />
+        )}
+        {/* FOLLOWING */}
+        {currentAction === 'FOLLOWING' && (
+          <Following followingList={followingList} />
         )}
       </main>
     </div>

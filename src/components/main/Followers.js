@@ -1,10 +1,9 @@
 import React from 'react';
-// import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import FirebaseConfig from '../../firebaseConfig';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -21,20 +20,6 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(16),
       height: theme.spacing(16),
     },
-  },
-  large: {
-    width: theme.spacing(15),
-    height: theme.spacing(15),
-  },
-  titleProfile: {
-    margin: '10px 0px 10px 0px',
-  },
-  TableContainer: {
-    width: 650,
-    margin: '50px 0 50px 0',
-  },
-  table: {
-    width: 650,
   },
   paper: {
     display: 'flex',
@@ -54,34 +39,52 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProfileUser(props) {
+export default function Followers(props) {
   const classes = useStyles();
-  const usersAdminRef = FirebaseConfig.database().ref('Users');
-  const tempAd = [];
-  // const { usersList } = props;
-  // var tempUsersList;
-  // useEffect(() => {
-  //   tempUsersList = usersList;
-  // }, [usersList]);
-  usersAdminRef.on('value', (snapshot) => {
-    var usersTbl = snapshot.val();
-    for (let id in usersTbl) {
-      tempAd.push({ id, ...usersTbl[id] });
+
+  const [followersList, setFollowersList] = useState([]);
+  const [followersID, setFollowersID] = useState([]);
+  const [followersDetail, setFollowersDetail] = useState([]);
+
+  useEffect(() => {
+    setFollowersList(props.followersList);
+  }, [props]);
+
+  useEffect(() => {
+    if (followersList[0] !== undefined) {
+      const temp = [];
+      for (let follower in followersList) {
+        temp.push(followersList[follower].ID);
+      }
+      console.log(temp);
+      setFollowersID(temp);
     }
-    // setUsersList(tempAd);
-  });
+  }, [followersList]);
+
+  useEffect(() => {
+    if (followersID[0] !== undefined) {
+      const tempDetail = [];
+      for (let i in followersID) {
+        const folowerDetailRef = FirebaseConfig.database()
+          .ref('Users')
+          .child(followersID[i]);
+        folowerDetailRef.on('value', (snapshot) => {
+          tempDetail.push(snapshot.val());
+        });
+      }
+      console.log(tempDetail);
+      setFollowersDetail(tempDetail);
+    }
+  }, [followersID]);
 
   return (
     <Paper className={classes.paper}>
-      <Box className={classes.titleProfile}>
-        <h1>Profile User</h1>
-      </Box>
-      {tempAd !== {} &&
-        tempAd.map((userItem, index) => (
-          <Paper key={index} className={classes.paperItem}>
+      {followersDetail !== [] &&
+        followersDetail.map((follower, index) => (
+          <Paper key={index}>
             <Avatar
               alt='Remy Sharp'
-              src={userItem.userImageUrl}
+              src={follower.userImageUrl}
               className={classes.large}
             />
             <TableContainer
@@ -94,19 +97,19 @@ export default function ProfileUser(props) {
                     <TableCell component='th' scope='row'>
                       Fullname:
                     </TableCell>
-                    <TableCell align='left'>{userItem.userFullName}</TableCell>
+                    <TableCell align='left'>{follower.userFullName}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component='th' scope='row'>
                       Email:
                     </TableCell>
-                    <TableCell align='left'>{userItem.userEmail}</TableCell>
+                    <TableCell align='left'>{follower.userEmail}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component='th' scope='row'>
                       Bio:
                     </TableCell>
-                    <TableCell align='left'>{userItem.userBio}</TableCell>
+                    <TableCell align='left'>{follower.userBio}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
