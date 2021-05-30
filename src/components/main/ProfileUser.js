@@ -63,7 +63,7 @@ export default function ProfileUser(props) {
   const [userE, setUserE] = useState('');
   const [userB, setUserB] = useState('');
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleChangeFullName = (event) => {
     setUserFN(event.target.value);

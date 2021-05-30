@@ -110,6 +110,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const hideElement = {
+  display: 'none',
+};
+
+const showElement = {
+  display: 'flex',
+};
+
 export default function MainView({ handleLogOut }) {
   const classes = useStyles();
   const theme = useTheme();
@@ -117,7 +125,7 @@ export default function MainView({ handleLogOut }) {
   const currentUserID = FirebaseConfig.auth().currentUser.uid;
   var isAdmin = false;
   if (currentUserID === 'HGRsUSOUv8ZiYX0Fxd2UC1Dw88s1') {
-    isAdmin = isAdmin;
+    isAdmin = !isAdmin;
   }
 
   // Default Account action
@@ -160,87 +168,87 @@ export default function MainView({ handleLogOut }) {
     const followersRef = usersRef.child('Follow').child('Followers');
     const followingRef = usersRef.child('Follow').child('Following');
 
-    // if (currentUserID === 'HGRsUSOUv8ZiYX0Fxd2UC1Dw88s1') {
-    //   eventsRef.on('value', (snapshot) => {
-    //     var eventsTbl = snapshot.val();
-    //     const temp = [];
-    //     for (let id in eventsTbl) {
-    //       temp.push({ id, ...eventsTbl[id] });
-    //     }
-    //     setEventsList(temp);
-    //   });
-    //   usersAdminRef.on('value', (snapshot) => {
-    //     var usersTbl = snapshot.val();
-    //     const tempAd = [];
-    //     for (let id in usersTbl) {
-    //       tempAd.push({ id, ...usersTbl[id] });
-    //     }
-    //     setUsersList(tempAd);
-    //   });
-    // } else {
-    eventsRef.on('value', (snapshot) => {
-      const eventsTbl = snapshot.val();
-      const eventsListTbl = [];
-      const temp = [];
-      for (let hostEvent in eventsTbl) {
-        temp.push(hostEvent);
-      }
-      const tempEvents = temp;
-      for (let i = 0; i < tempEvents.length; i++) {
-        eventsRef.child(tempEvents[i]).on('value', (snapshotEV) => {
-          const item = snapshotEV.val();
-          let ID = tempEvents[i];
-          if (item.uid === currentUserID) {
-            eventsListTbl.push({ ID, ...item });
-          }
-        });
-      }
-      setEventsList(eventsListTbl);
-    });
-    usersRef.on('value', (snapshot) => {
-      setUsersList(snapshot.val());
-    });
-    followersRef.on('value', (snapshot) => {
-      const follower = [];
-      for (let ID in snapshot.val()) {
-        follower.push({ ID });
-      }
-      const tempFollowers = [];
-      for (let i in follower) {
-        tempFollowers.push(follower[i].ID);
-      }
-      const tempFollowersDetail = [];
-      for (let i in tempFollowers) {
-        const folowerDetailRef = FirebaseConfig.database()
-          .ref('Users')
-          .child(tempFollowers[i]);
-        folowerDetailRef.on('value', (snapshot) => {
-          tempFollowersDetail.push(snapshot.val());
-        });
-      }
-      setFollowersList(tempFollowersDetail);
-    });
-    followingRef.on('value', (snapshot) => {
-      const following = [];
-      for (let ID in snapshot.val()) {
-        following.push({ ID });
-      }
-      const tempFollowing = [];
-      for (let i in following) {
-        tempFollowing.push(following[i].ID);
-      }
-      const tempFollowingDetail = [];
-      for (let i in tempFollowing) {
-        const followingDetailRef = FirebaseConfig.database()
-          .ref('Users')
-          .child(tempFollowing[i]);
-        followingDetailRef.on('value', (snapshot) => {
-          tempFollowingDetail.push(snapshot.val());
-        });
-      }
-      setFollowingList(tempFollowingDetail);
-    });
-    // }
+    if (currentUserID === 'HGRsUSOUv8ZiYX0Fxd2UC1Dw88s1') {
+      eventsRef.on('value', (snapshot) => {
+        var eventsTbl = snapshot.val();
+        const temp = [];
+        for (let id in eventsTbl) {
+          temp.push({ id, ...eventsTbl[id] });
+        }
+        setEventsList(temp);
+      });
+      usersAdminRef.on('value', (snapshot) => {
+        var usersTbl = snapshot.val();
+        const tempAd = [];
+        for (let id in usersTbl) {
+          tempAd.push({ id, ...usersTbl[id] });
+        }
+        setUsersList(tempAd);
+      });
+    } else {
+      eventsRef.on('value', (snapshot) => {
+        const eventsTbl = snapshot.val();
+        const eventsListTbl = [];
+        const temp = [];
+        for (let hostEvent in eventsTbl) {
+          temp.push(hostEvent);
+        }
+        const tempEvents = temp;
+        for (let i = 0; i < tempEvents.length; i++) {
+          eventsRef.child(tempEvents[i]).on('value', (snapshotEV) => {
+            const item = snapshotEV.val();
+            let ID = tempEvents[i];
+            if (item.uid === currentUserID) {
+              eventsListTbl.push({ ID, ...item });
+            }
+          });
+        }
+        setEventsList(eventsListTbl);
+      });
+      usersRef.on('value', (snapshot) => {
+        setUsersList(snapshot.val());
+      });
+      followersRef.on('value', (snapshot) => {
+        const follower = [];
+        for (let ID in snapshot.val()) {
+          follower.push({ ID });
+        }
+        const tempFollowers = [];
+        for (let i in follower) {
+          tempFollowers.push(follower[i].ID);
+        }
+        const tempFollowersDetail = [];
+        for (let i in tempFollowers) {
+          const folowerDetailRef = FirebaseConfig.database()
+            .ref('Users')
+            .child(tempFollowers[i]);
+          folowerDetailRef.on('value', (snapshot) => {
+            tempFollowersDetail.push(snapshot.val());
+          });
+        }
+        setFollowersList(tempFollowersDetail);
+      });
+      followingRef.on('value', (snapshot) => {
+        const following = [];
+        for (let ID in snapshot.val()) {
+          following.push({ ID });
+        }
+        const tempFollowing = [];
+        for (let i in following) {
+          tempFollowing.push(following[i].ID);
+        }
+        const tempFollowingDetail = [];
+        for (let i in tempFollowing) {
+          const followingDetailRef = FirebaseConfig.database()
+            .ref('Users')
+            .child(tempFollowing[i]);
+          followingDetailRef.on('value', (snapshot) => {
+            tempFollowingDetail.push(snapshot.val());
+          });
+        }
+        setFollowingList(tempFollowingDetail);
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -354,6 +362,7 @@ export default function MainView({ handleLogOut }) {
                 ? classes.selectedAction
                 : classes.action
             }
+            style={isAdmin === true ? hideElement : showElement}
           >
             <ListItemIcon
               className={
@@ -375,6 +384,7 @@ export default function MainView({ handleLogOut }) {
                 ? classes.selectedAction
                 : classes.action
             }
+            style={isAdmin === true ? hideElement : showElement}
           >
             <ListItemIcon
               className={
@@ -404,11 +414,11 @@ export default function MainView({ handleLogOut }) {
           <EventsManagement eventsList={eventsList} />
         )}
         {/* FOLLOWERS */}
-        {currentAction === 'FOLLOWERS' && (
+        {currentAction === 'FOLLOWERS' && isAdmin === false && (
           <Followers followersList={followersList} />
         )}
         {/* FOLLOWING */}
-        {currentAction === 'FOLLOWING' && (
+        {currentAction === 'FOLLOWING' && isAdmin === false && (
           <Following followingList={followingList} />
         )}
       </main>
