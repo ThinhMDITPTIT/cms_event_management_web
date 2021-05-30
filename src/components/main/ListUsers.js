@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing(2),
-    background: 'white',
     minHeight: '80vh',
     minWidth: '60%',
     background:
