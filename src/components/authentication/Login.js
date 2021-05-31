@@ -19,7 +19,7 @@ export default function Login(props) {
       <div className='glass'>
         <div className='login'>
           <div className='loginContainer'>
-            <h1>Welcome to EvM CMS !!!</h1>
+            <h1 style={{ color: '#fff' }}>Welcome to EvM CMS !!!</h1>
             <label>Username</label>
             <input
               type='text'
@@ -42,7 +42,11 @@ export default function Login(props) {
             <div className='btnContainer'>
               {/* {hasAccount ? ( */}
               <>
-                <button className='buttonLogin_out' onClick={handleLogin}>
+                <button
+                  type='submit'
+                  className='buttonLogin_out'
+                  onClick={handleLogin}
+                >
                   Sign In
                 </button>
                 {/* <p>

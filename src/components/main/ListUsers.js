@@ -25,13 +25,14 @@ const useStyles = makeStyles((theme) => ({
   large: {
     width: theme.spacing(15),
     height: theme.spacing(15),
+    marginTop: '1.5rem',
   },
   titleProfile: {
     margin: '10px 0px 10px 0px',
   },
   TableContainer: {
     width: 650,
-    margin: '50px 0 50px 0',
+    margin: '50px 0 15px 0',
   },
   table: {
     width: 650,
@@ -58,6 +59,12 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     padding: theme.spacing(1),
     margin: '10px 0 10px 0',
+    background:
+      'linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 255, 255, 0.3))',
+    borderRadius: '1.5rem',
+    zIndex: 2,
+    boxShadow: '6px 6px 20px rgba(122, 122, 122, 0.212)',
+    backdropFilter: 'blur(2rem)',
   },
 }));
 
@@ -81,7 +88,7 @@ export default function ProfileUser(props) {
   return (
     <Paper className={classes.paper}>
       <Box className={classes.titleProfile}>
-        <h1>Profile User</h1>
+        <h1>List Users</h1>
       </Box>
       {tempAd !== {} &&
         tempAd.map((userItem, index) => (
