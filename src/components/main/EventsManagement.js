@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+// import { useEffect } from 'react';
 import FirebaseConfig from '../../firebaseConfig';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
@@ -100,6 +101,8 @@ export default function EventsManagement(props) {
 
   const [eventEditing, setEventEditing] = useState({});
   const [eventRemoving, setEventRemoving] = useState({});
+  const [eventDisable, setEventDisable] = useState({});
+  const [eventEnable, setEventEnable] = useState({});
 
   const [eventName, setEventName] = useState('');
   const [eventDescription, setEventDescription] = useState('');
@@ -139,7 +142,7 @@ export default function EventsManagement(props) {
         event_name: eventName,
         description: eventDescription,
         place: eventPlace,
-        Limit: eventLimit,
+        Limit: Number(eventLimit),
       });
       setOpen(false);
     } catch (error) {
@@ -216,6 +219,72 @@ export default function EventsManagement(props) {
       setEventEditing({ ID, ...snapshot.val() });
     });
   };
+
+  // Disable event
+  const [confirmDisable, setConfirmDisable] = useState('');
+  const [openConfirmDisable, setOpenConfirmDisable] = useState(false);
+  const handleCloseConfirmDisableEvent = (event) => {
+    setOpenConfirmDisable(false);
+    setConfirmDisable('');
+  };
+  const handleOpenConfirmDisableEvent = (eventID) => {
+    setOpenConfirmDisable(true);
+    eventsRef.child(eventID).on('value', (snapshot) => {
+      setEventDisable({ eventID, ...snapshot.val() });
+    });
+    setConfirmDisable('');
+  };
+  const handleChangeConfirmDisable = (event) => {
+    setConfirmDisable(event.target.value);
+  };
+  const handleDisableEvent = () => {
+    try {
+      const eventsRef = FirebaseConfig.database()
+        .ref('Events')
+        .child(eventDisable.eventID);
+      eventsRef.update({
+        enable: false,
+      });
+      setOpenConfirmDisable(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Enable event
+  const [confirmEnable, setConfirmEnable] = useState('');
+  const [openConfirmEnable, setOpenConfirmEnable] = useState(false);
+  const handleCloseConfirmEnableEvent = (event) => {
+    setOpenConfirmEnable(false);
+    setConfirmEnable('');
+  };
+  const handleOpenConfirmEnableEvent = (eventID) => {
+    setOpenConfirmEnable(true);
+    eventsRef.child(eventID).on('value', (snapshot) => {
+      setEventEnable({ eventID, ...snapshot.val() });
+    });
+    setConfirmEnable('');
+  };
+  const handleChangeConfirmEnable = (event) => {
+    setConfirmEnable(event.target.value);
+  };
+  const handleEnableEvent = () => {
+    try {
+      const eventsRef = FirebaseConfig.database()
+        .ref('Events')
+        .child(eventEnable.eventID);
+      eventsRef.update({
+        enable: true,
+      });
+      setOpenConfirmEnable(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // useEffect(() => {
+  //   console.log(eventsList);
+  // }, [eventsList]);
 
   return (
     <Paper className={classes.paper}>
@@ -376,14 +445,20 @@ export default function EventsManagement(props) {
                       <Button
                         variant='contained'
                         color='primary'
-                        // onClick={() => handleClickEdit(eventItem.ID)}
+                        disabled={eventItem.enable === true ? false : true}
+                        onClick={() =>
+                          handleOpenConfirmDisableEvent(eventItem.id)
+                        }
                       >
                         Disable
                       </Button>
                       <Button
                         variant='contained'
                         color='primary'
-                        // onClick={() => handleClickEdit(eventItem.ID)}
+                        disabled={eventItem.enable === true ? true : false}
+                        onClick={() =>
+                          handleOpenConfirmEnableEvent(eventItem.id)
+                        }
                       >
                         Enable
                       </Button>
@@ -479,6 +554,72 @@ export default function EventsManagement(props) {
             color='primary'
           >
             Remove
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openConfirmDisable}
+        onClose={handleCloseConfirmDisableEvent}
+        aria-labelledby='form-dialog-title'
+      >
+        <DialogTitle id='form-dialog-title'>
+          Are you sure to disable this event?
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            margin='dense'
+            id='confirm_disable'
+            label='Enter "CONFIRM_DISABLE"'
+            type='text'
+            value={confirmDisable}
+            onChange={handleChangeConfirmDisable}
+            fullWidth
+          ></TextField>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDisableEvent} color='primary'>
+            Cancel
+          </Button>
+          <Button
+            disabled={confirmDisable === 'CONFIRM_DISABLE' ? false : true}
+            onClick={handleDisableEvent}
+            color='primary'
+          >
+            Disable
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openConfirmEnable}
+        onClose={handleCloseConfirmEnableEvent}
+        aria-labelledby='form-dialog-title'
+      >
+        <DialogTitle id='form-dialog-title'>
+          Are you sure to enable this event?
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            margin='dense'
+            id='confirm_enable'
+            label='Enter "CONFIRM_ENABLE"'
+            type='text'
+            value={confirmEnable}
+            onChange={handleChangeConfirmEnable}
+            fullWidth
+          ></TextField>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmEnableEvent} color='primary'>
+            Cancel
+          </Button>
+          <Button
+            disabled={confirmEnable === 'CONFIRM_ENABLE' ? false : true}
+            onClick={handleEnableEvent}
+            color='primary'
+          >
+            Enable
           </Button>
         </DialogActions>
       </Dialog>
