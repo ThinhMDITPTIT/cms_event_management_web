@@ -171,9 +171,9 @@ export default function MainView({ handleLogOut }) {
         console.clear();
       }, 0);
     } else {
-      // setTimeout(function () {
-      //   console.clear();
-      // }, 0);
+      setTimeout(function () {
+        console.clear();
+      }, 0);
       setCurrentAction(action);
     }
     try {
