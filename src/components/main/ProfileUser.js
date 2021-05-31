@@ -113,7 +113,7 @@ export default function ProfileUser(props) {
   return (
     <Paper className={classes.paper}>
       <Box className={classes.titleProfile}>
-        <h1>Profile User</h1>
+        <h1>Profile</h1>
       </Box>
       <Avatar
         alt='Remy Sharp'

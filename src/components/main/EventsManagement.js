@@ -135,10 +135,8 @@ export default function EventsManagement(props) {
   };
   const handleUpdateEvent = () => {
     try {
-      const eventsRef = FirebaseConfig.database()
-        .ref('Events')
-        .child(eventEditing.ID);
-      eventsRef.update({
+      const eventEditingRef = eventsRef.child(eventEditing.ID);
+      eventEditingRef.update({
         event_name: eventName,
         description: eventDescription,
         place: eventPlace,
@@ -169,16 +167,24 @@ export default function EventsManagement(props) {
 
   const handleRemoveEvent = () => {
     eventsRef.child(eventRemoving.eventID).on('value', (snapshot) => {
-      console.log('remove this: ' + eventRemoving.eventID);
+      console.log('remove this event: ' + eventRemoving.eventID);
     });
+    // This line execute remove event
+    // eventsRef.child(eventRemoving.eventID).remove();
     usersRef.child('userEvents').on('value', (snapshot) => {
       const tempEV = [];
-      for (let i in snapshot.val()) {
-        tempEV.push(snapshot.val()[i]);
+      const result = snapshot.val();
+      for (let eventId in result) {
+        tempEV.push(eventId, result[eventId]);
       }
-      for (let i in tempEV) {
+      for (let i = 1; i < tempEV.length; i += 2) {
+        console.log(tempEV[i]);
         if (tempEV[i] === eventRemoving.eventID) {
-          console.log('remove this from user events: ' + tempEV[i]);
+          console.log(
+            'remove this event from host user event list: ' + tempEV[i - 1]
+          );
+          // This line execute remove event
+          // usersRef.child('userEvents').child(tempEV[i - 1]).remove();
         }
       }
     });
@@ -198,12 +204,17 @@ export default function EventsManagement(props) {
                 joinedEventID,
               });
             }
-            for (let i in tempJoinedEvents) {
-              if (tempJoinedEvents[i].joinedEventID === eventRemoving.eventID) {
+            for (let j in tempJoinedEvents) {
+              if (tempJoinedEvents[j].joinedEventID === eventRemoving.eventID) {
                 console.log(
-                  'remove this from joined list: ' +
-                    tempJoinedEvents[i].joinedEventID
+                  'remove this from joined user: ' + tempAllUsers[i].userItemID
                 );
+                // This line execute remove event
+                // allUsersRef
+                //   .child(tempAllUsers[i].userItemID)
+                //   .child('JoinedEvents')
+                //   .child(eventRemoving.eventID)
+                //   .remove();
               }
             }
           });
