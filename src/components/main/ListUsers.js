@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     padding: theme.spacing(2),
     minHeight: '80vh',
-    minWidth: '60%',
+    minWidth: '100%',
     background:
       'linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 255, 255, 0.3))',
     borderRadius: '2rem',
@@ -59,11 +59,12 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     padding: theme.spacing(1),
     margin: '10px 0 10px 0',
+    minWidth: '60%',
     background:
       'linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 255, 255, 0.3))',
     borderRadius: '1.5rem',
     zIndex: 2,
-    boxShadow: '6px 6px 20px rgba(122, 122, 122, 0.212)',
+    boxShadow: '6px 6px 20px rgba(122, 122, 122, 0.6)',
     backdropFilter: 'blur(2rem)',
   },
 }));
@@ -88,7 +89,7 @@ export default function ProfileUser(props) {
   return (
     <Paper className={classes.paper}>
       <Box className={classes.titleProfile}>
-        <h1>List Users</h1>
+        <h1 style={{ color: '#3f51b5' }}>List Users</h1>
       </Box>
       {tempAd !== {} &&
         tempAd.map((userItem, index) => (

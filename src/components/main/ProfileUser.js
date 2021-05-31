@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing(2),
-    minWidth: '60%',
+    minWidth: '100%',
     minHeight: '80vh',
     background:
       'linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 255, 255, 0.3))',
@@ -113,7 +113,7 @@ export default function ProfileUser(props) {
   return (
     <Paper className={classes.paper}>
       <Box className={classes.titleProfile}>
-        <h1>Profile</h1>
+        <h1 style={{ color: '#3f51b5' }}>Profile</h1>
       </Box>
       <Avatar
         alt='Remy Sharp'
