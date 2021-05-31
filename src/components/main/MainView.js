@@ -25,6 +25,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import EventIcon from '@material-ui/icons/Event';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 
 const drawerWidth = 240;
 
@@ -51,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: 36,
+    color: '#010811',
   },
   hide: {
     display: 'none',
@@ -112,9 +115,10 @@ const useStyles = makeStyles((theme) => ({
     color: '#010811',
   },
   logoutBtn: {
+    fontSize: '0.8rem',
+    fontWeight: 600,
     marginLeft: 'auto',
-    padding: 5,
-    backgroundColor: 'green',
+    padding: '5 10',
   },
   colorText: {
     color: '#426696',
@@ -394,7 +398,7 @@ export default function MainView({ handleLogOut }) {
                   : classes.action
               }
             >
-              <EventIcon />
+              <GroupAddIcon />
             </ListItemIcon>
             <ListItemText>Followers</ListItemText>
           </ListItem>
@@ -416,7 +420,7 @@ export default function MainView({ handleLogOut }) {
                   : classes.action
               }
             >
-              <EventIcon />
+              <SupervisorAccountIcon />
             </ListItemIcon>
             <ListItemText>Following</ListItemText>
           </ListItem>

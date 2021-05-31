@@ -57,9 +57,6 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: '6px 6px 20px rgba(122, 122, 122, 0.212)',
     backdropFilter: 'blur(2rem)',
   },
-  btn: {
-    backgroundColor: 'green',
-  },
 }));
 
 export default function ProfileUser(props) {
@@ -150,8 +147,7 @@ export default function ProfileUser(props) {
 
       <Button
         variant='contained'
-        color='secondary'
-        className={classes.btn}
+        color='primary'
         onClick={() => handleOpenEditProfile()}
       >
         Edit profile

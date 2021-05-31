@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -21,6 +22,20 @@ const useStyles = makeStyles((theme) => ({
       height: theme.spacing(16),
     },
   },
+  large: {
+    width: theme.spacing(15),
+    height: theme.spacing(15),
+  },
+  titleProfile: {
+    margin: '0px 0px 20px 0px',
+  },
+  TableContainer: {
+    width: 650,
+    margin: '50px 0 10px 0',
+  },
+  table: {
+    width: 650,
+  },
   paper: {
     display: 'flex',
     flexDirection: 'column',
@@ -36,13 +51,20 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: '6px 6px 20px rgba(122, 122, 122, 0.212)',
     backdropFilter: 'blur(2rem)',
   },
-  paperItem: {
+  paperTbl: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: theme.spacing(1),
-    margin: '10px 0 10px 0',
+    padding: theme.spacing(2),
+    // minHeight: '80vh',
+    minWidth: '60%',
+    background:
+      'linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 255, 255, 0.3))',
+    borderRadius: '2rem',
+    zIndex: 2,
+    boxShadow: '6px 6px 20px rgba(122, 122, 122, 0.212)',
+    backdropFilter: 'blur(2rem)',
   },
 }));
 
@@ -57,9 +79,12 @@ export default function Following(props) {
 
   return (
     <Paper className={classes.paper}>
+      <Box className={classes.titleProfile}>
+        <h1>Following</h1>
+      </Box>
       {followingList !== [] &&
         followingList.map((following, index) => (
-          <Paper key={index}>
+          <Paper key={index} className={classes.paperTbl}>
             <Avatar
               alt='Remy Sharp'
               src={following.userImageUrl}

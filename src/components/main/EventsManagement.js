@@ -38,10 +38,16 @@ const useStyles = makeStyles((theme) => ({
     // margin: '10px 0px 10px 0px',
   },
   TableContainer: {
-    width: 650,
+    width: '100%',
+    minWidth: 600,
   },
   table: {
-    width: 650,
+    width: '100%',
+  },
+  tblCellButton: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
   },
   paperTbl: {
     margin: '25px 0 25px 0',
@@ -214,7 +220,7 @@ export default function EventsManagement(props) {
   return (
     <Paper className={classes.paper}>
       <Box className={classes.titleProfile}>
-        <h1>Events Management</h1>
+        <h1>Events</h1>
       </Box>
       {eventsList &&
         isAdmin === false &&
@@ -278,9 +284,9 @@ export default function EventsManagement(props) {
                   </TableRow>
                   <TableRow>
                     <TableCell></TableCell>
-                    <TableCell align='right'>
+                    <TableCell className={classes.tblCellButton}>
                       <Button
-                        variant='outlined'
+                        variant='contained'
                         color='primary'
                         onClick={() =>
                           handleOpenConfirmRemoveEvent(eventItem.ID)
@@ -288,16 +294,16 @@ export default function EventsManagement(props) {
                       >
                         Remove
                       </Button>
-                    </TableCell>
-                    <TableCell align='center'>
                       <Button
-                        variant='outlined'
+                        variant='contained'
                         color='primary'
                         onClick={() => handleClickEdit(eventItem.ID)}
                       >
                         Edit
                       </Button>
                     </TableCell>
+                    {/* <TableCell align='center'>
+                    </TableCell> */}
                   </TableRow>
                 </TableBody>
               </Table>
@@ -366,6 +372,22 @@ export default function EventsManagement(props) {
                   </TableRow>
                   <TableRow>
                     <TableCell></TableCell>
+                    <TableCell className={classes.tblCellButton}>
+                      <Button
+                        variant='contained'
+                        color='primary'
+                        // onClick={() => handleClickEdit(eventItem.ID)}
+                      >
+                        Disable
+                      </Button>
+                      <Button
+                        variant='contained'
+                        color='primary'
+                        // onClick={() => handleClickEdit(eventItem.ID)}
+                      >
+                        Enable
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
