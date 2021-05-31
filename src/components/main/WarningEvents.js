@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-// import { useEffect } from 'react';
+import { useEffect } from 'react';
 import FirebaseConfig from '../../firebaseConfig';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
   titleProfile: {
     // margin: '10px 0px 10px 0px',
   },
+  warningTitle: {
+    color: '#f44336',
+  },
   TableContainer: {
     width: '100%',
     minWidth: 600,
@@ -52,11 +55,11 @@ const useStyles = makeStyles((theme) => ({
   },
   paperTbl: {
     margin: '25px 0 25px 0',
-    minWidth: '60%',
     paddingTop: 10,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    minWidth: '60%',
     alignItems: 'center',
     background:
       'linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 255, 255, 0.3))',
@@ -80,6 +83,9 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 2,
     backdropFilter: 'blur(2rem)',
   },
+  hideEvent: {
+    display: 'none',
+  },
   sliderImage: {
     display: 'flex',
     justifyContent: 'center',
@@ -93,15 +99,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     maxWidth: 500,
   },
-  hideEvent: {
-    display: 'none',
-  },
-  warningTitle: {
-    color: '#f44336',
-  },
 }));
 
-export default function EventsManagement(props) {
+export default function WarningEvents(props) {
   const classes = useStyles();
   const { eventsList } = props;
   const currentUserID = FirebaseConfig.auth().currentUser.uid;
@@ -109,14 +109,14 @@ export default function EventsManagement(props) {
   if (currentUserID === 'HGRsUSOUv8ZiYX0Fxd2UC1Dw88s1') {
     isAdmin = !isAdmin;
   }
+  // Check if have any disabled event?
+  const [checkEnableLists, setCheckEnableLists] = useState(true);
   const eventsRef = FirebaseConfig.database().ref('Events');
   const usersRef = FirebaseConfig.database().ref('Users').child(currentUserID);
   const allUsersRef = FirebaseConfig.database().ref('Users');
 
   const [eventEditing, setEventEditing] = useState({});
   const [eventRemoving, setEventRemoving] = useState({});
-  const [eventDisable, setEventDisable] = useState({});
-  const [eventEnable, setEventEnable] = useState({});
 
   const [eventName, setEventName] = useState('');
   const [eventDescription, setEventDescription] = useState('');
@@ -248,88 +248,47 @@ export default function EventsManagement(props) {
     });
   };
 
-  // Disable event
-  const [confirmDisable, setConfirmDisable] = useState('');
-  const [openConfirmDisable, setOpenConfirmDisable] = useState(false);
-  const handleCloseConfirmDisableEvent = (event) => {
-    setOpenConfirmDisable(false);
-    setConfirmDisable('');
-  };
-  const handleOpenConfirmDisableEvent = (eventID) => {
-    setOpenConfirmDisable(true);
-    eventsRef.child(eventID).on('value', (snapshot) => {
-      setEventDisable({ eventID, ...snapshot.val() });
-    });
-    setConfirmDisable('');
-  };
-  const handleChangeConfirmDisable = (event) => {
-    setConfirmDisable(event.target.value);
-  };
-  const handleDisableEvent = () => {
-    try {
-      const eventsRef = FirebaseConfig.database()
-        .ref('Events')
-        .child(eventDisable.eventID);
-      eventsRef.update({
-        enable: false,
-      });
-      setOpenConfirmDisable(false);
-    } catch (error) {
-      console.log(error);
+  useEffect(() => {
+    // console.log(eventsList);
+    for (let i in eventsList) {
+      if (eventsList[i].enable === false) {
+        setCheckEnableLists(false);
+      }
     }
-  };
-
-  // Enable event
-  const [confirmEnable, setConfirmEnable] = useState('');
-  const [openConfirmEnable, setOpenConfirmEnable] = useState(false);
-  const handleCloseConfirmEnableEvent = (event) => {
-    setOpenConfirmEnable(false);
-    setConfirmEnable('');
-  };
-  const handleOpenConfirmEnableEvent = (eventID) => {
-    setOpenConfirmEnable(true);
-    eventsRef.child(eventID).on('value', (snapshot) => {
-      setEventEnable({ eventID, ...snapshot.val() });
-    });
-    setConfirmEnable('');
-  };
-  const handleChangeConfirmEnable = (event) => {
-    setConfirmEnable(event.target.value);
-  };
-  const handleEnableEvent = () => {
-    try {
-      const eventsRef = FirebaseConfig.database()
-        .ref('Events')
-        .child(eventEnable.eventID);
-      eventsRef.update({
-        enable: true,
-      });
-      setOpenConfirmEnable(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // useEffect(() => {
-  //   console.log(eventsList);
-  // }, [eventsList]);
+  }, [eventsList]);
 
   return (
     <Paper className={classes.paper}>
-      <Box className={classes.titleProfile}>
-        <h1 style={{ color: '#3f51b5' }}>Events</h1>
-        <p
-          className={
-            eventsList.length !== 0 ? classes.hideEvent : classes.warningTitle
-          }
-        >
-          You don't have any events yet.
-        </p>
-      </Box>
+      {checkEnableLists === false && (
+        <Box className={classes.titleProfile}>
+          <h1 style={{ color: '#3f51b5' }}>Warning Events</h1>
+          <p className={classes.warningTitle}>
+            Your event contains content that violates community standards.
+          </p>
+          <p className={classes.warningTitle}>
+            If you have any questions, please contact the admin team via email:
+            ThinhMDITPTiT@gmail.com
+          </p>
+        </Box>
+      )}
+      {checkEnableLists === true && (
+        <Box className={classes.titleProfile}>
+          <h1 style={{ color: '#3f51b5' }}>Warning Events</h1>
+          <p className={classes.warningTitle}>
+            You don't have any community standards violation events yet.
+          </p>
+        </Box>
+      )}
       {eventsList &&
         isAdmin === false &&
+        checkEnableLists === false &&
         eventsList.map((eventItem, index) => (
-          <Paper key={index} className={classes.paperTbl}>
+          <Paper
+            key={index}
+            className={
+              eventItem.enable === true ? classes.hideEvent : classes.paperTbl
+            }
+          >
             <Box className={classes.sliderImage}>
               <Carousel className={classes.carousel}>
                 {eventItem.ImgUri_list &&
@@ -408,96 +367,6 @@ export default function EventsManagement(props) {
                     </TableCell>
                     {/* <TableCell align='center'>
                     </TableCell> */}
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-        ))}
-      {eventsList &&
-        isAdmin === true &&
-        eventsList.map((eventItem, index) => (
-          <Paper key={index} className={classes.paperTbl}>
-            <Box className={classes.sliderImage}>
-              <Carousel className={classes.carousel}>
-                {eventItem.ImgUri_list &&
-                  eventItem.ImgUri_list.map((image, indexItem) => (
-                    <img src={image} key={indexItem} alt='event_images' />
-                  ))}
-              </Carousel>
-            </Box>
-            <TableContainer
-              component={Paper}
-              className={classes.TableContainer}
-            >
-              <Table className={classes.table} aria-label='simple table'>
-                <TableBody>
-                  <TableRow>
-                    <TableCell component='th' scope='row'>
-                      Host:
-                    </TableCell>
-                    <TableCell align='left'>{eventItem.uid}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component='th' scope='row'>
-                      Event Name:
-                    </TableCell>
-                    <TableCell align='left'>{eventItem.event_name}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component='th' scope='row'>
-                      Description:
-                    </TableCell>
-                    <TableCell align='left'>{eventItem.description}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component='th' scope='row'>
-                      Place:
-                    </TableCell>
-                    <TableCell align='left'>{eventItem.place}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component='th' scope='row'>
-                      Limit:
-                    </TableCell>
-                    <TableCell align='left'>{eventItem.Limit}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component='th' scope='row'>
-                      Start Date:
-                    </TableCell>
-                    <TableCell align='left'>{eventItem.start_date}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component='th' scope='row'>
-                      End date:
-                    </TableCell>
-                    <TableCell align='left'>{eventItem.end_date}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell className={classes.tblCellButton}>
-                      <Button
-                        variant='contained'
-                        color='primary'
-                        disabled={eventItem.enable === true ? false : true}
-                        onClick={() =>
-                          handleOpenConfirmDisableEvent(eventItem.id)
-                        }
-                      >
-                        Disable
-                      </Button>
-                      <Button
-                        variant='contained'
-                        color='primary'
-                        disabled={eventItem.enable === true ? true : false}
-                        onClick={() =>
-                          handleOpenConfirmEnableEvent(eventItem.id)
-                        }
-                      >
-                        Enable
-                      </Button>
-                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -589,72 +458,6 @@ export default function EventsManagement(props) {
             color='primary'
           >
             Remove
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={openConfirmDisable}
-        onClose={handleCloseConfirmDisableEvent}
-        aria-labelledby='form-dialog-title'
-      >
-        <DialogTitle id='form-dialog-title'>
-          Are you sure to disable this event?
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            margin='dense'
-            id='confirm_disable'
-            label='Enter "CONFIRM_DISABLE"'
-            type='text'
-            value={confirmDisable}
-            onChange={handleChangeConfirmDisable}
-            fullWidth
-          ></TextField>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirmDisableEvent} color='primary'>
-            Cancel
-          </Button>
-          <Button
-            disabled={confirmDisable === 'CONFIRM_DISABLE' ? false : true}
-            onClick={handleDisableEvent}
-            color='primary'
-          >
-            Disable
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={openConfirmEnable}
-        onClose={handleCloseConfirmEnableEvent}
-        aria-labelledby='form-dialog-title'
-      >
-        <DialogTitle id='form-dialog-title'>
-          Are you sure to enable this event?
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            margin='dense'
-            id='confirm_enable'
-            label='Enter "CONFIRM_ENABLE"'
-            type='text'
-            value={confirmEnable}
-            onChange={handleChangeConfirmEnable}
-            fullWidth
-          ></TextField>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirmEnableEvent} color='primary'>
-            Cancel
-          </Button>
-          <Button
-            disabled={confirmEnable === 'CONFIRM_ENABLE' ? false : true}
-            onClick={handleEnableEvent}
-            color='primary'
-          >
-            Enable
           </Button>
         </DialogActions>
       </Dialog>

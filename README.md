@@ -15,9 +15,11 @@ Powerfull by ThinhMD
 - Edit personal events
 - See list followers
 - See list following
+- See warning list events (contains content that violates community standards)
 
 # Feature of admin:
 
 - See list users of app (Event management)
 - See list events of all users
-- Disable/Enable events of users
+- Disable events of users
+- Enable events of users

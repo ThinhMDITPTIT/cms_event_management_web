@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     padding: theme.spacing(2),
     minHeight: '80vh',
-    minWidth: '60%',
+    minWidth: '100%',
     background:
       'linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 255, 255, 0.3))',
     borderRadius: '2rem',
@@ -63,8 +63,14 @@ const useStyles = makeStyles((theme) => ({
       'linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 255, 255, 0.3))',
     borderRadius: '2rem',
     zIndex: 2,
-    boxShadow: '6px 6px 20px rgba(122, 122, 122, 0.212)',
+    boxShadow: '6px 6px 20px rgba(122, 122, 122, 0.6)',
     backdropFilter: 'blur(2rem)',
+  },
+  hideEvent: {
+    display: 'none',
+  },
+  warningTitle: {
+    color: '#f44336',
   },
 }));
 
@@ -80,7 +86,16 @@ export default function Following(props) {
   return (
     <Paper className={classes.paper}>
       <Box className={classes.titleProfile}>
-        <h1>Following</h1>
+        <h1 style={{ color: '#3f51b5' }}>Following</h1>
+        <p
+          className={
+            followingList.length !== 0
+              ? classes.hideEvent
+              : classes.warningTitle
+          }
+        >
+          You haven't followed anyone yet.
+        </p>
       </Box>
       {followingList !== [] &&
         followingList.map((following, index) => (

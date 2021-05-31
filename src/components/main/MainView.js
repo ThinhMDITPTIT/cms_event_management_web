@@ -5,6 +5,7 @@ import ListUsers from './ListUsers';
 import Followers from './Followers';
 import Following from './Following';
 import EventsManagement from './EventsManagement';
+import WarningEvents from './WarningEvents';
 
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -27,6 +28,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import EventIcon from '@material-ui/icons/Event';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import WarningIcon from '@material-ui/icons/Warning';
 
 const drawerWidth = 240;
 
@@ -97,7 +99,9 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
     fontFamily: '"Poppins", sans-serif',
     minHeight: '100vh',
-    background: 'linear-gradient(to right top, #65dfc9, #6cdbeb)',
+    // background: 'linear-gradient(to right top, #65dfc9, #6cdbeb)',
+    // background: 'linear-gradient(to right top, #ffffff, #ffffff)',
+    background: 'linear-gradient(to right top, #e0f2f1, #e0f2f1)',
   },
   mainView: {
     display: 'flex',
@@ -121,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '5 10',
   },
   colorText: {
-    color: '#426696',
+    color: '#3f51b5',
     fontWeight: 600,
     fontSize: '1.8rem',
     opacity: 0.9,
@@ -222,8 +226,10 @@ export default function MainView({ handleLogOut }) {
           eventsRef.child(tempEvents[i]).on('value', (snapshotEV) => {
             const item = snapshotEV.val();
             let ID = tempEvents[i];
-            if (item.uid === currentUserID) {
-              eventsListTbl.push({ ID, ...item });
+            if (item !== undefined && item !== null) {
+              if (item.uid === currentUserID) {
+                eventsListTbl.push({ ID, ...item });
+              }
             }
           });
         }
@@ -358,28 +364,6 @@ export default function MainView({ handleLogOut }) {
             </ListItemIcon>
             <ListItemText>Profile</ListItemText>
           </ListItem>
-
-          {/* Events */}
-          <ListItem
-            button
-            onClick={() => actionCallBack('EVENTS')}
-            className={
-              currentAction === 'EVENTS'
-                ? classes.selectedAction
-                : classes.action
-            }
-          >
-            <ListItemIcon
-              className={
-                currentAction === 'EVENTS'
-                  ? classes.selectedAction
-                  : classes.action
-              }
-            >
-              <EventIcon />
-            </ListItemIcon>
-            <ListItemText>Events</ListItemText>
-          </ListItem>
           {/* Followers */}
           <ListItem
             button
@@ -424,22 +408,61 @@ export default function MainView({ handleLogOut }) {
             </ListItemIcon>
             <ListItemText>Following</ListItemText>
           </ListItem>
+          {/* Events */}
+          <ListItem
+            button
+            onClick={() => actionCallBack('EVENTS')}
+            className={
+              currentAction === 'EVENTS'
+                ? classes.selectedAction
+                : classes.action
+            }
+          >
+            <ListItemIcon
+              className={
+                currentAction === 'EVENTS'
+                  ? classes.selectedAction
+                  : classes.action
+              }
+            >
+              <EventIcon />
+            </ListItemIcon>
+            <ListItemText>Events</ListItemText>
+          </ListItem>
+          {/* WarningEventsList */}
+          <ListItem
+            button
+            onClick={() => actionCallBack('WARNINGEVENTS')}
+            className={
+              currentAction === 'WARNINGEVENTS'
+                ? classes.selectedAction
+                : classes.action
+            }
+            style={isAdmin === true ? hideElement : showElement}
+          >
+            <ListItemIcon
+              className={
+                currentAction === 'WARNINGEVENTS'
+                  ? classes.selectedAction
+                  : classes.action
+              }
+            >
+              <WarningIcon />
+            </ListItemIcon>
+            <ListItemText>Warning Events</ListItemText>
+          </ListItem>
         </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <div className={classes.mainView}>
-          {/* PROFILE USER */}
+          {/* LIST USER FOR ADMIN */}
           {currentAction === 'PROFILE' && isAdmin === true && (
             <ListUsers usersList={usersList} />
           )}
           {/* PROFILE USER */}
           {currentAction === 'PROFILE' && isAdmin === false && (
             <ProfileUser usersList={usersList} />
-          )}
-          {/* EVENTS MANAGEMENT */}
-          {currentAction === 'EVENTS' && (
-            <EventsManagement eventsList={eventsList} />
           )}
           {/* FOLLOWERS */}
           {currentAction === 'FOLLOWERS' && isAdmin === false && (
@@ -448,6 +471,14 @@ export default function MainView({ handleLogOut }) {
           {/* FOLLOWING */}
           {currentAction === 'FOLLOWING' && isAdmin === false && (
             <Following followingList={followingList} />
+          )}
+          {/* EVENTS MANAGEMENT */}
+          {currentAction === 'EVENTS' && (
+            <EventsManagement eventsList={eventsList} />
+          )}
+          {/* WARNING EVENTS */}
+          {currentAction === 'WARNINGEVENTS' && isAdmin === false && (
+            <WarningEvents eventsList={eventsList} />
           )}
         </div>
       </main>
