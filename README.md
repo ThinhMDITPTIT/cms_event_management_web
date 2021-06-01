@@ -11,10 +11,12 @@ Powerfull by ThinhMD
 
 - See personal profile
 - Edit personal profile
-- See personal events
-- Edit personal events
 - See list followers
 - See list following
+- See personal events
+- Edit personal events
+- Remove persional events
+- See list joined events
 - See warning list events (contains content that violates community standards)
 
 # Feature of admin:
@@ -23,3 +25,4 @@ Powerfull by ThinhMD
 - See list events of all users
 - Disable events of users
 - Enable events of users
+- See list of events being censored

@@ -5,6 +5,7 @@ import ListUsers from './ListUsers';
 import Followers from './Followers';
 import Following from './Following';
 import EventsManagement from './EventsManagement';
+import JoinedEvents from './JoinedEvents';
 import WarningEvents from './WarningEvents';
 
 import clsx from 'clsx';
@@ -28,6 +29,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import EventIcon from '@material-ui/icons/Event';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import WarningIcon from '@material-ui/icons/Warning';
 
 const drawerWidth = 240;
@@ -154,6 +156,7 @@ export default function MainView({ handleLogOut }) {
   const [currentAction, setCurrentAction] = useState('PROFILE');
 
   const [eventsList, setEventsList] = useState({});
+  const [joinedEventsList, setJoinedEventsList] = useState({});
   const [usersList, setUsersList] = useState({});
   const [followersList, setFollowersList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
@@ -189,6 +192,10 @@ export default function MainView({ handleLogOut }) {
 
   useEffect(() => {
     const eventsRef = FirebaseConfig.database().ref('Events');
+    const joinedEvents = FirebaseConfig.database()
+      .ref('Users')
+      .child(currentUserID)
+      .child('JoinedEvents');
     const usersAdminRef = FirebaseConfig.database().ref('Users');
     const usersRef = FirebaseConfig.database()
       .ref('Users')
@@ -234,6 +241,23 @@ export default function MainView({ handleLogOut }) {
           });
         }
         setEventsList(eventsListTbl);
+      });
+      joinedEvents.on('value', (snapshot) => {
+        const joinedEV = [];
+        for (let joinedEventID in snapshot.val()) {
+          joinedEV.push({ joinedEventID, ...snapshot.val()[joinedEventID] });
+        }
+        const joinedEvID = [];
+        for (let i in joinedEV) {
+          joinedEvID.push(joinedEV[i].joinedEventID);
+        }
+        const listEvents = [];
+        for (let i in joinedEvID) {
+          eventsRef.child(joinedEvID[i]).on('value', (snapshot) => {
+            listEvents.push(snapshot.val());
+          });
+        }
+        setJoinedEventsList(listEvents);
       });
       usersRef.on('value', (snapshot) => {
         setUsersList(snapshot.val());
@@ -429,6 +453,28 @@ export default function MainView({ handleLogOut }) {
             </ListItemIcon>
             <ListItemText>Events</ListItemText>
           </ListItem>
+          {/* Joined Events */}
+          <ListItem
+            button
+            onClick={() => actionCallBack('JOINEDEVENTS')}
+            className={
+              currentAction === 'JOINEDEVENTS'
+                ? classes.selectedAction
+                : classes.action
+            }
+            style={isAdmin === true ? hideElement : showElement}
+          >
+            <ListItemIcon
+              className={
+                currentAction === 'JOINEDEVENTS'
+                  ? classes.selectedAction
+                  : classes.action
+              }
+            >
+              <EventAvailableIcon />
+            </ListItemIcon>
+            <ListItemText>Joined Events</ListItemText>
+          </ListItem>
           {/* WarningEventsList */}
           <ListItem
             button
@@ -438,7 +484,7 @@ export default function MainView({ handleLogOut }) {
                 ? classes.selectedAction
                 : classes.action
             }
-            style={isAdmin === true ? hideElement : showElement}
+            // style={isAdmin === true ? hideElement : showElement}
           >
             <ListItemIcon
               className={
@@ -476,8 +522,12 @@ export default function MainView({ handleLogOut }) {
           {currentAction === 'EVENTS' && (
             <EventsManagement eventsList={eventsList} />
           )}
+          {/* JOINED EVENTS */}
+          {currentAction === 'JOINEDEVENTS' && isAdmin === false && (
+            <JoinedEvents joinedEventsList={joinedEventsList} />
+          )}
           {/* WARNING EVENTS */}
-          {currentAction === 'WARNINGEVENTS' && isAdmin === false && (
+          {currentAction === 'WARNINGEVENTS' && (
             <WarningEvents eventsList={eventsList} />
           )}
         </div>
