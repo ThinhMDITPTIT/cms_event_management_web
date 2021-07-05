@@ -26,3 +26,5 @@ Powerfull by ThinhMD
 - Disable events of users
 - Enable events of users
 - See list of events being censored
+
+# Link deploy: https://evmadmin.netlify.app/
